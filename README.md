@@ -11,7 +11,7 @@ For starting the cluster you can do it by running:
 I recommend that you take a look at the `up.sh` to know what it does, then the `Vagrantfile` and then each script to see how you can quickly bootstrap a functional cluster (not production ready, but functional), also be aware that you will need at least 6 Gbs of free memory for the virtual machines.
 
 
-Coy the kubeconfig to your machine, export its path as an environment variable and test it (give it at least 5 mins for the machines to boot, install everything and are running, you can watch the vagrant log).
+Copy the kubeconfig to your machine, export its path as an environment variable and test it (give it at least 5 mins for the machines to boot, install everything and the kubelets to start running, you can watch the vagrant log).
 ```
 vagrant ssh cluster1-master1 -c "sudo cat /root/.kube/config" > vagrant-kubeconfig
 export KUBECONFIG="$(pwd)/vagrant-kubeconfig"
@@ -35,4 +35,4 @@ NOTE: This is purely educational, USE AT YOUR OWN RISK.
 
 This is based in this [repo](https://github.com/wuestkamp/cka-example-environments)
 
-For more info to there and if you are practicing for the CKA you can go to: [https:/killer.sh](https:/killer.sh)
+For more info go there and if you are practicing for the CKA you can go to: [https:/killer.sh](https:/killer.sh)
