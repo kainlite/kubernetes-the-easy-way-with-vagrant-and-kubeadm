@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx-redis
+  name: nginx-redis
+  namespace: pepe
+spec:
+  containers:
+  - image: nginx:latest
+    name: nginx
+    resources: {}
+  - image: redis:latest
+    name: redis
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
