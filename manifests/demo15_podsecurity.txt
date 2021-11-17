@@ -1,0 +1,38 @@
+# git clone https://github.com/kubernetes/pod-security-admission
+# cd pod-security-admission
+# make certs && kustomize build | kubectl apply -f -
+# kubectl create ns demo15
+# kubectl label ns demo15 pod-security.kubernetes.io/restricted=latest
+# kubectl run demo15 --image=nginx -n demo15
+# # add this in the apiserver
+# - --feature-gates=PodSecurity=true
+#
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo15-baseline
+  labels:
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: v1.22
+
+    # We are setting these to our _desired_ `enforce` level.
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.22
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.22
+
+
+# Example output
+# kubectl run demo15 --image=nginx -n demo15-baseline
+
+# Warning: would violate "v1.22" version of "restricted" PodSecurity profile: allowPrivilegeEscalation != false (container "demo15" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "demo15" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "demo15" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "demo15" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+# Warning: would violate PodSecurity "restricted:v1.22": allowPrivilegeEscalation != false (container "demo15" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "demo15" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "demo15" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "demo15" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+# pod/demo15 created
+
+
+# useful pages:
+# https://github.com/kubernetes/pod-security-admission
+# https://github.com/kubernetes/enhancements/tree/master/keps/sig-auth/2579-psp-replacement#namespace-policy-update-warnings
+# https://kubernetes.io/docs/concepts/security/pod-security-admission/
+# https://kubernetes.io/docs/tasks/configure-pod-container/enforce-standards-namespace-labels/

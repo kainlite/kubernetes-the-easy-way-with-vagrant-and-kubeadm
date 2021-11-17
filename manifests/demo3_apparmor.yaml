@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: deny
+  annotations:
+    # container.apparmor.security.beta.kubernetes.io/<containername>:localhost/<profilename>
+    container.apparmor.security.beta.kubernetes.io/deny: localhost/deny_write
+spec:
+  nodeName: cluster1-worker1
+  containers:
+  - name: deny
+    image: busybox
+    command: ["sh", "-c", "echo 'Hello AppArmor!' && sleep 1h"]
+
+###
+# #include <tunables/global>
+# profile deny_write flags=(attach_disconnected) {
+#   #include <abstractions/base>
+
+#   file,
+#   deny /** w,
+# }

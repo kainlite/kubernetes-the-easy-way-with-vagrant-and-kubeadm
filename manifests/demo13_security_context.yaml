@@ -1,0 +1,32 @@
+# https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: demo13
+  name: demo13
+spec:
+  containers:
+  - image: nginx
+    name: demo13
+    resources: {}
+    securityContext:
+      readOnlyRootFilesystem: true
+    volumeMounts:
+      - name: run
+        mountPath: /var/run
+      - name: log
+        mountPath: /var/log/nginx
+      - name: cache
+        mountPath: /var/cache/nginx
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+    - name: run
+      emptyDir: {}
+    - name: log
+      emptyDir: {}
+    - name: cache
+      emptyDir: {}
+status: {}

@@ -1,0 +1,38 @@
+## Modify the API server with
+
+    - --audit-policy-file=/etc/kubernetes/audit/policy.yaml
+    - --audit-log-path=/etc/kubernetes/audit/logs/audit.log
+    - --audit-log-maxsize=50
+    - --audit-log-maxbackup=3
+
+    - mountPath: /etc/kubernetes/audit
+      name: etc-kubernetes-audit
+      readOnly: true
+    - mountPath: /etc/kubernetes/audit/logs
+      name: etc-kubernetes-audit-logs
+      readOnly: false
+
+    - hostPath:
+      path: /etc/kubernetes/audit
+      type: DirectoryOrCreate
+    name: etc-kubernetes-audit
+    - hostPath:
+      path: /etc/kubernetes/audit/logs
+      type: DirectoryOrCreate
+    name: etc-kubernetes-audit-logs
+
+## the policy from: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/
+---
+apiVersion: audit.k8s.io/v1 # This is required.
+kind: Policy
+omitStages:
+  - "RequestReceived"
+rules:
+  - level: RequestResponse
+    resources:
+    - group: ""
+      resources: ["deployments"]
+
+
+### debug with docker:
+docker ps -a | grep api | awk '{ print $1 }' | xargs -I{} -exec docker logs {}

@@ -1,0 +1,25 @@
+# https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+# https://kubernetes.io/docs/concepts/containers/runtime-class/
+---
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: containerd
+handler: runc
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: democontainerd
+  name: democontainerd
+  namespace: demo
+spec:
+  nodeName: cluster1-worker1
+  runtimeClassName: containerd
+  containers:
+  - image: nginx
+    name: demo
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
